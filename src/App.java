@@ -1,4 +1,6 @@
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -8,8 +10,9 @@ import java.util.Map;
 
 public class App {
     public static void main(String[] args) throws Exception {
+        
         // Fazer uma conexão HTTP e buscar os 250 séries
-        String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopTVs.json";
+        String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopMovies.json";
         URI endereco = URI.create(url);
         var client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder(endereco).GET().build();
@@ -22,16 +25,21 @@ public class App {
         List<Map<String, String>> listaDeFilmes = parser.parse(body);
         
         // exibir e manipular os dados
-        for (Map<String,String> filme : listaDeFilmes) {
-            System.out.println("\u001b[30m \u001b[45mFilme:\u001b[m " + filme.get("title"));
-            System.out.println("\u001b[32m \u001b[46mURL da imagem:\u001b[m " +filme.get("image"));
-            double classficacao = Double.parseDouble(filme.get("imDbRating"));
-            int numeroEstrelinhas = (int) classficacao;
+        var geradora =  new GeradoraDeFigurinhas();
 
-            for(int n=1; n <= numeroEstrelinhas; n++) {
-                System.out.print("⭐");
-            }
-            System.out.println("\n");
+        for (Map<String,String> filme : listaDeFilmes) {
+
+            String urlImage = filme.get("image");
+            String titulo = filme.get("title");
+
+            InputStream inputStream = new URL(urlImage).openStream();
+            String nomeArquivo = titulo + ".png";
+
+            
+            geradora.cria(inputStream, nomeArquivo);
+
+            System.out.println(titulo);
+            System.out.println();
 
         }
     }
