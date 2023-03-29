@@ -8,8 +8,8 @@ import java.util.Map;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        // Fazer uma conexão HTTP e buscar os 250 filmes
-        String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/MostPopularMovies.json";
+        // Fazer uma conexão HTTP e buscar os 250 séries
+        String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java-2-api/main/TopTVs.json";
         URI endereco = URI.create(url);
         var client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder(endereco).GET().build();
@@ -23,10 +23,16 @@ public class App {
         
         // exibir e manipular os dados
         for (Map<String,String> filme : listaDeFilmes) {
-            System.out.println(filme.get("title"));
-            System.out.println(filme.get("image"));
-            System.out.println(filme.get("imDbRating"));
-            System.out.println();
+            System.out.println("\u001b[30m \u001b[45mFilme:\u001b[m " + filme.get("title"));
+            System.out.println("\u001b[32m \u001b[46mURL da imagem:\u001b[m " +filme.get("image"));
+            double classficacao = Double.parseDouble(filme.get("imDbRating"));
+            int numeroEstrelinhas = (int) classficacao;
+
+            for(int n=1; n <= numeroEstrelinhas; n++) {
+                System.out.print("⭐");
+            }
+            System.out.println("\n");
+
         }
     }
 }
